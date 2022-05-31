@@ -1,4 +1,5 @@
 package pages;
+
 import TestTools.TestData;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -14,47 +15,54 @@ import static com.codeborne.selenide.Condition.visible;
 
 public class LoginPage {
 
-    @FindBy(how= How.XPATH, using = "//a[text()='Зарегистрироваться']")
-    public SelenideElement registrationLink;
+    @FindBy(how = How.XPATH, using = "//a[text()='Зарегистрироваться']")
+    private SelenideElement registrationLink;
+    @FindBy(how = How.XPATH, using = "//h2[text()=\"Вход\"]")
+    private SelenideElement loginHeader;
+    @FindBy(how = How.XPATH, using = "(//input)")
+    private ElementsCollection registrationFields;
+    @FindBy(how = How.XPATH, using = "//button[text()='Войти']")
+    private SelenideElement loginButton;
+    @FindBy(how = How.XPATH, using = "//a[@href='/forgot-password']")
+    private SelenideElement passwordRecoveryLink;
+
     @Step("Нажать на ссылку регистрации")
-    public void doRegistrationLinkClick(){
+    public void doRegistrationLinkClick() {
         registrationLink.click();
     }
-    @FindBy(how = How.XPATH, using = "//h2[text()=\"Вход\"]")
-    public SelenideElement loginHeader;
+
     @Step("Проверить видимость логотипа")
-    public LoginPage isLoginHeaderVisible(){
+    public LoginPage isLoginHeaderVisible() {
         loginHeader.shouldBe(visible);
         return this;
     }
-    @FindBy(how = How.XPATH, using = "(//input)")
-    public ElementsCollection registrationFields;
+
     @Step("Зполнить поле авторизации")
-    public LoginPage doFillLoginFields(int fieldOrderNumber, String filling){
+    public LoginPage doFillLoginFields(int fieldOrderNumber, String filling) {
         registrationFields.get(fieldOrderNumber).sendKeys(filling);
         return this;
     }// Метод использует нумерацию полей с нуля, по аналогии с массивом
-    @FindBy(how= How.XPATH, using = "//button[text()='Войти']")
-    public SelenideElement loginButton;
+
     @Step("Нажать клавишу входа")
-    public void doLoginButtonClick(){
+    public void doLoginButtonClick() {
         loginButton.click();
     }
+
     @Step("Дождаться видимости клавиши входа")
-    public void waitLoginButton(){
+    public void waitLoginButton() {
         loginButton.shouldBe(visible, Duration.ofSeconds(10));
     }
-    @FindBy(how = How.XPATH, using = "//a[@href='/forgot-password']")
-    public SelenideElement passwordRecoveryLink;
+
     @Step("Нажать на ссылку восстановления пароля")
-    public void doPasswordRecoveryLinkClick(){
+    public void doPasswordRecoveryLinkClick() {
         passwordRecoveryLink.click();
     }
+
     @Step("Войти в систему, используя тестовые данные")
-    public void loginUsingTestData(TestData testData){
+    public void loginUsingTestData(TestData testData) {
         isLoginHeaderVisible()
-                .doFillLoginFields(0,testData.getTestEmail())
-                .doFillLoginFields(1,testData.getTestPassword())
+                .doFillLoginFields(0, testData.getTestEmail())
+                .doFillLoginFields(1, testData.getTestPassword())
                 .doLoginButtonClick();
     }
 }
